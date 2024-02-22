@@ -9,21 +9,15 @@ async function main(): Promise<void> {
   const vault = await Vault.attach(contractAddress);
 
 
-async function depositFunds(amount: number): Promise<void> {
-  const amountInEther = ethers.parseEther(amount.toString());
+  async function depositFunds(amount: number): Promise<void> {
+   
+    const amountInEther = ethers.parseEther(amount.toString());
 
-  // Specify gas price and gas limit
-  const overrides = {
-    gasPrice: ethers.parseUnits("10", "gwei"), // Adjust the gas price as needed
-    gasLimit: 100000, // Adjust the gas limit as needed
-    value: amountInEther,
-  };
+    const tx = await vault.deposit({ value: amountInEther });
+    await tx.wait();
 
-  const tx = await vault.deposit(overrides);
-  await tx.wait();
-
-  console.log(`Deposited ${amount} ether into the contract.`);
-}
+    console.log(`Deposited ${amount} ether into the contract.`);
+  }
 
 
   async function claimFunds(): Promise<void> {
@@ -37,8 +31,8 @@ async function depositFunds(amount: number): Promise<void> {
 
  
   try {
-    await depositFunds(1); // Deposit 1 ether
-    await claimFunds(); // Claim funds as the beneficiary
+    await depositFunds(1); 
+    await claimFunds(); 
   } catch (error) {
     console.error("Error:", error);
   }
